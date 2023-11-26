@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "imagen_url": "https://img.freepik.com/vector-gratis/perro-lindo-alegre-sobre-fondo-blanco_1308-132745.jpg?size=626&ext=jpg&ga=GA1.1.1880011253.1698969600&semt=ais",
+        "nombre": "Perros"
+    },
+    {
+        "id": 2,
+        "imagen_url": "https://img.freepik.com/fotos-premium/gatito-naranja-dibujos-animados-sentado-suelo_893012-134126.jpg?w=2000",
+        "nombre": "Gatos"
+    },
+    {
+        "id": 3,
+        "imagen_url": "https://img.freepik.com/fotos-premium/fondo-lindo-color-solido-loro-felpa_878375-863.jpg?size=338&ext=jpg&ga=GA1.1.1518270500.1698364800&semt=ais",
+        "nombre": "Aves"
+    },
+    {
+        "id": 4,
+        "imagen_url": "https://img.freepik.com/fotos-premium/ilustracion-tarjeta-flash-peces-dibujos-animados-lindo_732449-770.jpg",
+        "nombre": "Peces"
+    },
+    {
+        "id": 5,
+        "imagen_url": "https://img.freepik.com/vector-gratis/ejemplo-lindo-icono-vector-historieta-zanahoria-mordedura-conejo-concepto-icono-naturaleza-animal-plano-aislado_138676-7366.jpg",
+        "nombre": "Conejos"
+    },
+    {
+        "id": 6,
+        "imagen_url": "https://img.freepik.com/fotos-premium/caricaturista-logotipo-hamster_643934-3824.jpg?size=338&ext=jpg&ga=GA1.1.386372595.1698105600&semt=sph",
+        "nombre": "Hamster"
+    }
+]
