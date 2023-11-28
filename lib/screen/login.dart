@@ -1,12 +1,15 @@
 import 'dart:convert';
 
 import 'package:final_project/model/user.dart';
+import 'package:final_project/providers/userProvider.dart';
+import 'package:final_project/screen/home_admin.dart';
 import 'package:final_project/screen/home_adopter.dart';
 import 'package:final_project/screen/signup.dart';
 import 'package:final_project/util/alreadyHaveAnAccountCheck.dart';
 import 'package:final_project/util/customButtomLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -27,10 +30,9 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> _handleLogin() async {
-    final apiUrl = "http://jeyliss05.pythonanywhere.com/api/usuarios";
+    final url = "http://jeyliss05.pythonanywhere.com/api/usuarios";
 
-    final response = await http.get(Uri.parse(apiUrl));
-    print(response.body);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final List<dynamic> usersData = json.decode(response.body);
 
@@ -44,19 +46,26 @@ class _LoginState extends State<Login> {
       if (user != null) {
         final loggedInUser = User.fromJson(user);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return HomeAdopter(user: loggedInUser);
-            },
-          ),
-        );
+        Provider.of<UserProvider>(context, listen: false).setUser(loggedInUser);
+
+        if (loggedInUser.typeuser == 'Admin') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Home_Adm(),
+            ),
+          );
+        } else if (loggedInUser.typeuser == 'Adopter') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeAdopter(user: loggedInUser),
+            ),
+          );
+        }
       } else {
-        print('Error en la solicitud HTTP: ${response.statusCode}');
-        print('Cuerpo de la respuesta: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Credenciales incorrectas'),
             duration: Duration(seconds: 2),
           ),

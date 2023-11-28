@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:final_project/model/user.dart';
 import 'package:final_project/util/alreadyHaveAnAccountCheck.dart';
 import 'package:final_project/util/customButtomLogin.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -11,20 +16,43 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   bool _obscureText = false;
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController userController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+  final String url = 'http://jeyliss05.pythonanywhere.com/api/saveusuario';
+
+  Future<void> sendDataAPI(User user) async {
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(
+          user.toJson(),
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print('Usuario guardado con exito');
+        print(response.body);
+      } else {
+        print(
+            'Error al guardar datos del usuario... Respuesta: ${response.statusCode}');
+        print(response.body);
+      }
+    } catch (e) {
+      print('Error ${e}');
+    }
+  }
 
   @override
   void initState() {
     _obscureText = true;
     super.initState();
   }
-
-  //final _formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController userController = TextEditingController();
-  TextEditingController passController = TextEditingController();
-
-//  UserManager userManager = UserManager();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +70,7 @@ class _SignUpState extends State<SignUp> {
           SingleChildScrollView(
             child: Center(
                 child: Form(
-              //key: _formKey,
+              key: _formKey,
               child: Column(
                 children: [
                   const SizedBox(
@@ -59,7 +87,7 @@ class _SignUpState extends State<SignUp> {
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: TextFormField(
                       keyboardType: TextInputType.name,
-                      controller: userController,
+                      controller: emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide:
@@ -85,7 +113,7 @@ class _SignUpState extends State<SignUp> {
                           Icons.person,
                           color: Color(0xFFA4593C),
                         ),
-                        labelText: 'email',
+                        labelText: 'Correo Electronico',
                         labelStyle: const TextStyle(
                             fontSize: 15,
                             color: Color(0xFFA4593C),
@@ -94,6 +122,9 @@ class _SignUpState extends State<SignUp> {
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Por favor, llene los datos vacios';
+                        }
+                        if (!value.contains('@')) {
+                          return 'El formato del correo esta incompleto';
                         }
                         return null;
                       },
@@ -105,7 +136,7 @@ class _SignUpState extends State<SignUp> {
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: TextFormField(
                       keyboardType: TextInputType.name,
-                      controller: userController,
+                      controller: phoneController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide:
@@ -141,9 +172,7 @@ class _SignUpState extends State<SignUp> {
                         if (value!.isEmpty) {
                           return 'Por favor, llene los datos vacios';
                         }
-                        if (value.contains('@')) {
-                          return 'El formato del correo esta incompleto';
-                        }
+
                         return null;
                       },
                       onSaved: (value) => phoneController =
@@ -261,7 +290,22 @@ class _SignUpState extends State<SignUp> {
                           value?.replaceAll(' ', '') as TextEditingController,
                     ),
                   ),
-                  CustomBottomLogin(press: () async {}, title: 'Registrarse'),
+                  CustomBottomLogin(
+                      press: () async {
+                        if (_formKey.currentState!.validate()) {
+                          User newUser = User(
+                            phone: phoneController.text,
+                            password: passController.text,
+                            email: emailController.text,
+                            state: true,
+                            name: userController.text,
+                            nameUser: userController.text,
+                            typeuser: 'Adoptante',
+                          );
+                          sendDataAPI(newUser);
+                        }
+                      },
+                      title: 'Registrarse'),
                   AlreadyHaveAnAccount(
                       login: false,
                       press: () {

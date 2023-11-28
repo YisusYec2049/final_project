@@ -28,23 +28,18 @@ class PetsProvider {
   }
 
   Future<List<Pets>> fetchLocation(String location) async {
-    print('Fetching pets for location: $location');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
-      print('All Pets: $jsonData');
 
       List<Pets> filteredPets =
           jsonData.map((pets) => Pets.fromJson(pets)).where((pets) {
         final petLocation = pets.location.toLowerCase();
         final selectedLocation = location.toLowerCase();
-        print(
-            'Pet Location: $petLocation, Selected Location: $selectedLocation');
         return location == 'Todos' || petLocation == selectedLocation;
       }).toList();
 
-      print('Filtered Pets: $filteredPets, Length: ${filteredPets.length}');
       return filteredPets;
     } else {
       throw Exception('Error en location');

@@ -178,8 +178,7 @@ class _HomeAdopterState extends State<HomeAdopter> {
               Expanded(
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.149,
-                  child: PetsPageState(
-                      petsProvider: petsProvider, selectedCity: selectedCity),
+                  child: PetsPageState(petsProvider: petsProvider),
                 ),
               ),
               const CustomBottomNavigationBar(

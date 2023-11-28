@@ -2,32 +2,44 @@ class User {
   final String phone;
   final String password;
   final String email;
-  final bool state;
-  final int id;
+  final bool? state;
   final String name;
   final String nameUser;
   final String typeuser;
 
-  User(
-      {required this.phone,
-      required this.password,
-      required this.email,
-      required this.state,
-      required this.id,
-      required this.name,
-      required this.nameUser,
-      required this.typeuser});
+  User({
+    required this.phone,
+    required this.password,
+    required this.email,
+    this.state,
+    required this.name,
+    required this.nameUser,
+    required this.typeuser,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-        phone: json['celular'],
-        password: json['contrasena'] as String? ?? '',
-        email: json['correo'],
-        state: json['estado'],
-        id: json['id'],
-        name: json['nombre'],
-        nameUser: json['nombreusuario'] as String? ?? '',
-        typeuser: json['tipousuario']);
+    try {
+      return User(
+        phone: json['celular'] ?? '',
+        password: json['contrasena'] ?? '',
+        email: json['correo'] ?? '',
+        state: json['estado'] ?? true,
+        name: json['nombre'] ?? '',
+        nameUser: json['nombreusuario'] ?? '',
+        typeuser: json['tipousuario'] ?? '',
+      );
+    } catch (e) {
+      print('Error al convertir json a User: $e');
+      return User(
+        phone: '',
+        password: '',
+        email: '',
+        state: false,
+        name: '',
+        nameUser: '',
+        typeuser: '',
+      );
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -36,10 +48,9 @@ class User {
       'contraseña': password,
       'correo': email,
       'estado': state,
-      'id': id,
       'nombre': name,
       'nombreusuario': nameUser,
-      'tipousuario': typeuser
+      'tipousuario': typeuser,
     };
   }
 }

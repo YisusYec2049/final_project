@@ -1,3 +1,4 @@
+import 'package:final_project/screen/login.dart';
 import 'package:final_project/util/linePainter2.dart';
 import 'package:final_project/util/navigationBar.dart';
 import 'package:flutter/material.dart';
@@ -258,9 +259,15 @@ class _AccountState extends State<Account> {
               ),
               const Text('Salir'),
               const SizedBox(
-                width: 250,
+                width: 240,
               ),
-              const Icon(Icons.keyboard_arrow_right),
+              IconButton(
+                onPressed: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => const Login()));
+                },
+                icon: const Icon(Icons.keyboard_arrow_right),
+              ),
             ],
           ),
           const SizedBox(

@@ -6,33 +6,24 @@ import 'package:google_fonts/google_fonts.dart';
 
 class PetsPageState extends StatefulWidget {
   final PetsProvider petsProvider;
-  final String selectedCity;
 
-  const PetsPageState(
-      {Key? key, required this.petsProvider, required this.selectedCity})
-      : super(key: key);
+  const PetsPageState({Key? key, required this.petsProvider}) : super(key: key);
 
   @override
-  State<PetsPageState> createState() =>
-      _PetsPageStateState(selectedCity: selectedCity);
+  State<PetsPageState> createState() => _PetsPageStateState();
 }
 
 class _PetsPageStateState extends State<PetsPageState> {
   late Future<List<Pets>> _listPets;
-  final String selectedCity;
-
-  _PetsPageStateState({required this.selectedCity});
 
   @override
   void initState() {
     super.initState();
-    print('Selected City in initState: $selectedCity');
-    _listPets = widget.petsProvider.fetchLocation(selectedCity);
+    _listPets = widget.petsProvider.fetchPets();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('Building PetsPageState for location: $selectedCity');
     return FutureBuilder(
       future: _listPets,
       builder: (context, snapshot) {
@@ -47,8 +38,6 @@ class _PetsPageStateState extends State<PetsPageState> {
         } else if (snapshot.hasData) {
           List<Pets> shuffledList = List.from(snapshot.data as List<Pets>)
             ..shuffle();
-          print('Filtered Pets: $shuffledList');
-          print('Filtered Pets Length: ${shuffledList.length}');
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -69,7 +58,6 @@ class _PetsPageStateState extends State<PetsPageState> {
       data.length,
       (index) {
         var pet = data[index];
-        print('Building Widget for Pet: $pet');
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
