@@ -50,24 +50,50 @@ class _Home_AdmState extends State<Home_Adm> {
                       ),
                     ),
                     const SizedBox(height: 4.0),
-                    Text(
-                      "Admon",
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25.0,
-                        color: const Color(0xFFF87D28),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Home_Adm(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Admon",
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25.0,
+                          color: const Color(0xFFF87D28),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleAvatar(
-                      radius: 30.0,
-                      backgroundImage: AssetImage("assets/rossi.jpeg"),
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(40),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black,
+                                blurRadius: 4,
+                              )
+                            ]),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.person_4),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

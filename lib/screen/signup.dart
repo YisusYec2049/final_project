@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:final_project/model/user.dart';
+import 'package:final_project/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:final_project/model/user.dart' as local;
 import 'package:final_project/util/alreadyHaveAnAccountCheck.dart';
 import 'package:final_project/util/customButtomLogin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,15 +16,26 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final FirebaseAuthService _auth = FirebaseAuthService();
   bool _obscureText = false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController userController = TextEditingController();
   TextEditingController passController = TextEditingController();
+
+  @override
+  void dispose() {
+    userController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passController.dispose();
+    super.dispose();
+  }
+
   final String url = 'http://jeyliss05.pythonanywhere.com/api/saveusuario';
 
-  Future<void> sendDataAPI(User user) async {
+  Future<void> sendDataAPI(local.User user) async {
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -293,17 +305,18 @@ class _SignUpState extends State<SignUp> {
                   CustomBottomLogin(
                       press: () async {
                         if (_formKey.currentState!.validate()) {
-                          User newUser = User(
+                          local.User newUser = local.User(
                             phone: phoneController.text,
                             password: passController.text,
                             email: emailController.text,
                             state: true,
                             name: userController.text,
                             nameUser: userController.text,
-                            typeuser: 'Adoptante',
+                            typeuser: 'Adopter',
                           );
                           sendDataAPI(newUser);
                         }
+                        _signUp();
                       },
                       title: 'Registrarse'),
                   AlreadyHaveAnAccount(
@@ -318,5 +331,21 @@ class _SignUpState extends State<SignUp> {
         ],
       ),
     );
+  }
+
+  void _signUp() async {
+    String username = userController.text;
+    String email = emailController.text;
+    String phone = phoneController.text;
+    String password = passController.text;
+
+    User? user = await _auth.signUpEmailAndPassword(email, password);
+
+    if (user != null) {
+      print('User is successfully created');
+      Navigator.pushNamed(context, '/home');
+    } else {
+      print('Some error happend');
+    }
   }
 }

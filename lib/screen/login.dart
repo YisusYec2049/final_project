@@ -1,12 +1,14 @@
 import 'dart:convert';
 
-import 'package:final_project/model/user.dart';
+import 'package:final_project/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:final_project/model/user.dart' as local;
 import 'package:final_project/providers/userProvider.dart';
 import 'package:final_project/screen/home_admin.dart';
 import 'package:final_project/screen/home_adopter.dart';
 import 'package:final_project/screen/signup.dart';
 import 'package:final_project/util/alreadyHaveAnAccountCheck.dart';
 import 'package:final_project/util/customButtomLogin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -19,9 +21,17 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final FirebaseAuthService _auth = FirebaseAuthService();
   bool _obscureText = false;
-  TextEditingController userController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -38,13 +48,13 @@ class _LoginState extends State<Login> {
 
       final user = usersData.firstWhere(
         (userData) =>
-            userData['nombreusuario'] == userController.text &&
+            userData['correo'] == emailController.text &&
             userData['contrasena'] == passController.text,
         orElse: () => null,
       );
 
       if (user != null) {
-        final loggedInUser = User.fromJson(user);
+        final loggedInUser = local.User.fromJson(user);
 
         Provider.of<UserProvider>(context, listen: false).setUser(loggedInUser);
 
@@ -73,10 +83,6 @@ class _LoginState extends State<Login> {
       }
     }
   }
-
-  //final _formKey = GlobalKey<FormState>();
-
-//  UserManager userManager = UserManager();
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +117,7 @@ class _LoginState extends State<Login> {
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: TextFormField(
                       keyboardType: TextInputType.name,
-                      controller: userController,
+                      controller: emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide:
@@ -134,10 +140,10 @@ class _LoginState extends State<Login> {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         prefixIcon: const Icon(
-                          Icons.person,
+                          Icons.email,
                           color: Color(0xFFA4593C),
                         ),
-                        labelText: 'Usuario',
+                        labelText: 'email',
                         labelStyle: const TextStyle(
                             fontSize: 15,
                             color: Color(0xFFA4593C),
@@ -149,7 +155,7 @@ class _LoginState extends State<Login> {
                         }
                         return null;
                       },
-                      onSaved: (value) => userController =
+                      onSaved: (value) => emailController =
                           value?.replaceAll(' ', '') as TextEditingController,
                     ),
                   ),
@@ -218,7 +224,7 @@ class _LoginState extends State<Login> {
                           value?.replaceAll(' ', '') as TextEditingController,
                     ),
                   ),
-                  CustomBottomLogin(press: _handleLogin, title: 'Ingresar'),
+                  CustomBottomLogin(press: _signIn, title: 'Ingresar'),
                   AlreadyHaveAnAccount(
                       press: () async {
                         Navigator.push(
@@ -238,5 +244,19 @@ class _LoginState extends State<Login> {
         ],
       ),
     );
+  }
+
+  void _signIn() async {
+    String email = emailController.text;
+    String password = passController.text;
+
+    User? user = await _auth.signInEmailAndPassword(email, password);
+
+    if (user != null) {
+      print('User is successfully created');
+      _handleLogin();
+    } else {
+      print('Some error happend');
+    }
   }
 }

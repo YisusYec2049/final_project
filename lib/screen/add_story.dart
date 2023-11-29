@@ -12,15 +12,11 @@ class Add_story extends StatefulWidget {
 }
 
 class _Add_storyState extends State<Add_story> {
-  bool _obscureText = false;
   File? _image;
-  FocusNode _nameFocus = FocusNode();
-  FocusNode _locationFocus = FocusNode();
-  FocusNode _ageFocus = FocusNode();
+  final FocusNode _nameFocus = FocusNode();
 
   @override
   void initState() {
-    _obscureText = true;
     super.initState();
   }
 
@@ -103,25 +99,21 @@ class _Add_storyState extends State<Add_story> {
           Container(
             color: Colors.white,
           ),
-          // Contenedor superior simulando una barra de título personalizada
+
           Container(
             padding: const EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Flecha para regresar
                 IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    // Acción al presionar la flecha de regreso
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              Story_Adm()), // Reemplaza "Pantalla2" con el nombre de tu pantalla
+                      MaterialPageRoute(builder: (context) => Story_Adm()),
                     );
                   },
                 ),
@@ -138,7 +130,7 @@ class _Add_storyState extends State<Add_story> {
               ],
             ),
           ),
-          // Contenedor para agregar foto
+
           Padding(
             padding: const EdgeInsets.fromLTRB(30.0, 25.0, 30.0, 8.0),
             child: Center(
@@ -167,7 +159,7 @@ class _Add_storyState extends State<Add_story> {
               ),
             ),
           ),
-          // Contenedor para agregar nombre
+
           Padding(
             padding: const EdgeInsets.fromLTRB(30.0, 20.0, 30.0, 5.0),
             child: Center(
@@ -205,7 +197,7 @@ class _Add_storyState extends State<Add_story> {
               ),
             ),
           ),
-          // Contenedor para la descripción
+
           Padding(
             padding: const EdgeInsets.fromLTRB(30.0, 20.0, 30.0, 5.0),
             child: Center(
@@ -221,8 +213,7 @@ class _Add_storyState extends State<Add_story> {
                   ),
                 ),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment
-                      .start, // Alineación en la parte superior
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Padding(
                       padding: EdgeInsets.only(top: 10.0, left: 10.0),
@@ -250,22 +241,20 @@ class _Add_storyState extends State<Add_story> {
             ),
           ),
 
-          // Botón central en la parte inferior
           Container(
             child: Padding(
               padding: const EdgeInsets.all(55.0),
               child: Positioned(
                 child: Center(
                   child: Container(
-                    width: 200.0, // Ancho del botón
-                    height: 50.0, // Altura del botón
+                    width: 200.0,
+                    height: 50.0,
                     decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(25.0), // Borde redondeado
+                      borderRadius: BorderRadius.circular(25.0),
                       gradient: const LinearGradient(
                         colors: [
-                          Color(0xFFF87D28), // Color inicial
-                          Color(0xFFA4593C), // Color final
+                          Color(0xFFF87D28),
+                          Color(0xFFA4593C),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -273,16 +262,14 @@ class _Add_storyState extends State<Add_story> {
                     ),
                     child: ElevatedButton(
                       onPressed: () {
-                        // Mostrar el diálogo de éxito
                         _showSuccessDialog();
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent, // Color transparente
+                        primary: Colors.transparent,
                         elevation: 0.0, // Sin sombra
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25.0),
-                          side: const BorderSide(
-                              color: Colors.white), // Borde blanco
+                          side: const BorderSide(color: Colors.white),
                         ),
                       ),
                       child: const Text(
